@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.media.AudioManager;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.android.bluetooth.R;
@@ -126,15 +125,12 @@ class A2dpCodecConfig {
             return;
         }
 
-        boolean sbc_priority = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.SBC_HD_PRIORITY, 0) != 0;
-
         // Set the mandatory codec's priority to default, and remove the rest
         for (int i = 0; i < codecConfigArray.length; i++) {
             BluetoothCodecConfig codecConfig = codecConfigArray[i];
             if (!codecConfig.isMandatoryCodec()) {
                 codecConfigArray[i] = null;
-            } else if (sbc_priority) {
+            } else {
                 // Rebuild SBC selectable codec with Dual Channel (SBC HD audio)
                 codecConfigArray[i] = new BluetoothCodecConfig(
                     BluetoothCodecConfig.SOURCE_CODEC_TYPE_SBC, mA2dpSourceCodecPrioritySbc,
